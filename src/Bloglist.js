@@ -11,7 +11,7 @@ const BlogList = ({ data, title }) => {
                     <Link to={`/blogdetails/${blog.id}`}>
                         <h2>{blog.title}</h2>
                         <p> written by {blog.author}</p>
-                    </Link> 
+                    </Link>
                     </div>
                 ))
             }
