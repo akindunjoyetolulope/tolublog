@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 
 
 const useHttp = () => {
-  const [isPending, setIsPending] = useState(true);
+  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
 
 
@@ -10,7 +10,6 @@ const useHttp = () => {
        setError(null)
        setIsPending(true)
     try{
-
         const response = await fetch(reqConfig.url, {
             method: reqConfig.method ? reqConfig.method : 'GET',
             headers: reqConfig.headers ? reqConfig.headers : {},

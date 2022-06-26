@@ -5,7 +5,7 @@ import Create from './Create';
 import BlogDetails from './BlogDetails';
 import NotFound from './NotFound';
 
-function App(props) {
+function App() {
   return (
     <Router>
         <div className="App">
@@ -13,7 +13,7 @@ function App(props) {
         <div className='content'>
           <Switch>
             <Route exact path="/">
-              <Home onAddBlog={onAddBlog}/>
+              <Home />
             </Route>
             <Route path="/create">
               <Create />
