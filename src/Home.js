@@ -1,59 +1,37 @@
+import { useState, useEffect } from "react";
 import useHttp from "./hooks/use-http";
 import BlogList from "./Bloglist";
-import { useEffect, useState } from "react/cjs/react.production.min";
 
-const Home = (props) => {
+const Home = () => {
   const [isdata, setisdata] = useState([]);
-
   const { isPending, error, sendReq } = useHttp();
-
-  const enterBlogHandler = (blog) =>{
-    const reqConfig = {
-        url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
-        method: "POST",
-        body: {...blog},
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
   
-      const applyData = (data) =>{
-          const generatedId = data.name; // firebase-specific => "name" contains generated id
-          const createdBlog = { id: generatedId, title: blog.title, body:blog.body, author:blog.author };
-          props.onAddBlog(createdBlog) 
+  useEffect(()=>{
+    const reqConfig = {
+      url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
+    };
+
+    const applyData = (data) => {
+      const blogs = [];
+      for (let blog in data) {
+        blogs.push({
+          id: blog,
+          title: data[blog].title,
+          body: data[blog].body,
+          author: data[blog].author,
+        });
       }
-      
-      sendReq(reqConfig, applyData)
-  }
+      setisdata(blogs) 
+    }
 
-//   useEffect(() => {
-//     const reqConfig = {
-//       url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
-//     };
-
-//     const applyData = async (data) => {
-      
-//         const loadedBlog = [];
-//         for (let blog in data) {
-//           loadedBlog.push({
-//             id: blog,
-//             title: data[blog].title,
-//             body: data[blog].body,
-//             author: data[blog].author,
-//           });
-//         }
-//         setdata(loadedBlog);
-     
-//     };
-
-//     fetchData(reqConfig, applyData);
-//   }, [fetchData]);
+    sendReq(reqConfig, applyData)
+  },[sendReq])
 
   return (
     <div className="home">
       {error && <div>{error}</div>}
       {isPending && <div> Loading... </div>}
-      {data && data.error ? <div>NO BLOG</div> : <BlogList data={data} title="All Blogs" />}
+      {isdata && <BlogList data={isdata} title="All Blogs" />}
     </div>
   );
 };

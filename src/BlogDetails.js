@@ -1,13 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useHttp from "./hooks/use-http";
-import { useState } from "react/cjs/react.production.min";
 
 
 const BlogDetails = () => {
   const { param } = useParams();
   const [singleBlog, setSingleBlog] = useState([]);
-  //    const { data: blog, isPending, error} = useFetch(`http://localhost:8888/blogs/${id}`);
   const { isPending, error, sendReq: fetchData } = useHttp();
 
   useEffect(() => {

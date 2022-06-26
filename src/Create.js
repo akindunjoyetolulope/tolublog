@@ -1,25 +1,40 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import useHttp from "./hooks/use-http";
-import useData from "./store/use-data";
 
-const Create = (props) => {
+const Create = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("ToluwaIope");
 
-
-  const ctx = useContext(useData);
   const history = useHistory();
+  const { isPending, error, sendReq} = useHttp();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const blog = { title, body, author };
-    if (title.length > 0 && body.length > 0) {
-      ctx.addBlog({ id: data.name, ...blog });
-      history.push("/");
+
+    const reqConfig = {
+      url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
+      method: "POST",
+      body: {...blog},
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const applyData = (data) =>{
+        const generatedId = data.name; // firebase-specific => "name" contains generated id
+        const createdBlog = { id: generatedId, ...blog};
+        if (createdBlog) {
+          history.push("/");
+        }
+        console.log(createdBlog)
     }
+    
+    sendReq(reqConfig, applyData)
+
+    
   };
 
   return (
@@ -52,8 +67,9 @@ const Create = (props) => {
           <option value="mario">mario</option>
           <option value="yoshi">yoshi</option>
         </select>
-        {isPending && <button> Add Blog</button>}
-        {!isPending && <button> Adding Blog... </button>}
+        {!isPending && <button> Add Blog</button>}
+        { isPending && <button> Adding Blog... </button>}
+        {error && <div>{error}</div>}
       </form>
     </div>
   );
