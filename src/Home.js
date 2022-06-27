@@ -5,13 +5,9 @@ import BlogList from "./Bloglist";
 const Home = () => {
   const [isdata, setisdata] = useState([]);
   const { isPending, error, sendReq } = useHttp();
-  
-  useEffect(()=>{
-    const reqConfig = {
-      url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
-    };
 
-    const applyData = (data) => {
+
+  const applyData = (data) => {
       const blogs = [];
       for (let blog in data) {
         blogs.push({
@@ -23,8 +19,20 @@ const Home = () => {
       }
       setisdata(blogs) 
     }
+  
+  useEffect(()=>{
+   
+    const reqConfig = {
+      url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
+    };
+
+    
 
     sendReq(reqConfig, applyData)
+    return () => {
+      // cancel the subscription
+     console.log('Clean up')
+  };
   },[sendReq])
 
   return (
