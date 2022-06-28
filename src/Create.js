@@ -5,7 +5,7 @@ import useInput from "./hooks/use-input";
 
 const Create = () => {
   const {
-    enterValue: enterValueTitle,
+    enterValue: title,
     onChangeHandler: onChangeHandlerTitle,
     onBlurHandler: onBlurHandlerTitle,
     hasError: hasErrorTitle,
@@ -14,7 +14,7 @@ const Create = () => {
   } = useInput((value) => value.trim("") !== "");
 
   const {
-    enterValue: enterValueBody,
+    enterValue: body,
     onChangeHandler: onChangeHandlerBody,
     onBlurHandler: onBlurHandlerBody,
     hasError: hasErrorBody,
@@ -23,6 +23,12 @@ const Create = () => {
   } = useInput((value) => value.trim("") !== "");
 
   const [author, setAuthor] = useState("ToluwaIope");
+
+  let fromIsValid = false;
+
+  if (isValidTitle && isValidBody) {
+    fromIsValid = true;
+  }
 
   const history = useHistory();
   const { isPending, error, sendReq} = useHttp();
@@ -34,7 +40,7 @@ const Create = () => {
       return;
     }
 
-    const blog = { title, body, author };
+    const blog = { title, body: body, author };
 
     const reqConfig = {
       url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
@@ -43,6 +49,7 @@ const Create = () => {
       headers: {
         "Content-Type": "application/json",
       },
+
     };
 
     const applyData = (data) =>{
@@ -55,9 +62,13 @@ const Create = () => {
     }
     
     sendReq(reqConfig, applyData)
-
+    reSetTitle()
+    reSetBody()
     
   };
+
+  const titleInput = hasErrorTitle ? "invalid" : " ";
+  const bodyInput = hasErrorBody ? "invalid" : " ";
 
   return (
     <div className="create">
@@ -65,17 +76,27 @@ const Create = () => {
       <form onSubmit={handleSubmit}>
         <label>Blog Title : </label>
         <input
+          className={titleInput}
           type="text"
           required
-          value={enterValueTitle}
+          value={title}
           onChange={onChangeHandlerTitle}
+          onBlur={onBlurHandlerTitle}
         />
+        {hasErrorTitle && (
+            <span className="error-text">Nigger Write Your Title</span>
+          )}
         <label>Blog Body :</label>
         <textarea
+          className={bodyInput}
           required
-          value={enterValueBody}
+          value={body}
           onChange={onChangeHandlerBody}
+          onBlur={onBlurHandlerBody}
         />
+        {hasErrorBody && (
+            <span className="error-text">Nigger Write Your Title</span>
+          )}
         <label> Blog author : </label>
         <select
           value={author}
@@ -87,7 +108,7 @@ const Create = () => {
           <option value="mario">mario</option>
           <option value="yoshi">yoshi</option>
         </select>
-        {!isPending && <button> Add Blog</button>}
+        {!isPending && <button disabled={!fromIsValid}> Add Blog</button>}
         { isPending && <button> Adding Blog... </button>}
         {error && <div>{error}</div>}
       </form>

@@ -102,3 +102,20 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
+.error-text {
+  color: #b40e0e;
+}
+
+button:disabled,
+button:disabled:hover,
+button:disabled:active{
+   background-color: rgb(201, 197, 197);
+   color: black;
+   cursor: none;
+}
+
+.invalid {
+  border: 1px solid #b40e0e;
+  background-color: #fddddd;
+}

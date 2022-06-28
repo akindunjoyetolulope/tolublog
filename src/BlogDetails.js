@@ -13,16 +13,17 @@ const BlogDetails = () => {
       url: "https://tolublog-6072d-default-rtdb.firebaseio.com/blogs.json",
     };
     const applyData = (data) => {
-      const blog = [];
+      const blogs = [];
       for (let blog in data) {
-        blog.push({
+        blogs.push({
           id: blog,
           title: data[blog].title,
           body: data[blog].body,
           author: data[blog].author,
         });
       }
-      setSingleBlog(blog)
+
+      setSingleBlog(blogs)
     };
 
     fetchData(reqConfig, applyData)
@@ -44,7 +45,7 @@ const BlogDetails = () => {
       {isPending && <div> Loading... </div>}
       {error && <div>{error}</div>}
       {singleBlog && singleBlog.filter((id) => id.id === param).map((blog)=>(
-        <article>
+        <article key={blog.id}>
           <h2>{blog.title}</h2>
           <p> {blog.author}</p>
           <div>
