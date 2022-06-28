@@ -1,10 +1,27 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import useHttp from "./hooks/use-http";
+import useInput from "./hooks/use-input";
 
 const Create = () => {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const {
+    enterValue: enterValueTitle,
+    onChangeHandler: onChangeHandlerTitle,
+    onBlurHandler: onBlurHandlerTitle,
+    hasError: hasErrorTitle,
+    isValid: isValidTitle,
+    reSet: reSetTitle,
+  } = useInput((value) => value.trim("") !== "");
+
+  const {
+    enterValue: enterValueBody,
+    onChangeHandler: onChangeHandlerBody,
+    onBlurHandler: onBlurHandlerBody,
+    hasError: hasErrorBody,
+    isValid: isValidBody,
+    reSet: reSetBody,
+  } = useInput((value) => value.trim("") !== "");
+
   const [author, setAuthor] = useState("ToluwaIope");
 
   const history = useHistory();
@@ -12,6 +29,11 @@ const Create = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!isValidTitle && !isValidBody) {
+      return;
+    }
+
     const blog = { title, body, author };
 
     const reqConfig = {
@@ -45,16 +67,14 @@ const Create = () => {
         <input
           type="text"
           required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={enterValueTitle}
+          onChange={onChangeHandlerTitle}
         />
         <label>Blog Body :</label>
         <textarea
           required
-          value={body}
-          onChange={(e) => {
-            setBody(e.target.value);
-          }}
+          value={enterValueBody}
+          onChange={onChangeHandlerBody}
         />
         <label> Blog author : </label>
         <select
